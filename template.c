@@ -74,7 +74,6 @@ int find_junctions(Graph* g) {
 			junction_count++;
 		}
 	}
-	printf("Number of junctions = %d",junction_count);
 	return junction_count;
 }
 
@@ -153,7 +152,7 @@ int find_impossible_pairs(Graph* g) {
 	int disconnected_pairs = 0;
 	for(int i = 0; i < n; i++){
 		for(int j = i; j < n; j++){
-			if(graph[i][j]==0){
+			if(closure[i][j]==0){
 				disconnected_pairs++;
 			}
 		}
@@ -170,35 +169,41 @@ int find_vital_train_tracks(Graph* g) {
 	int** closure =  warshall(g);
 	int** graph = g->adj;
 	int n = g->n;
-	int** temp_graph = (int**)calloc(n,sizeof(int*));
-	for(int i = 0; i < n; i++){
-		temp_graph[i] = (int*)calloc(n,sizeof(int));
-		for(int j = 0; j < n; j++){
-			temp_graph[i][j] = graph[i][j];
-		}
-	}
-	struct Graph* TEMP;
-	TEMP->adj = temp_graph;
-	TEMP->n = n;
-	TEMP->station_names = NULL;
+	// int** temp_graph = (int**)calloc(n,sizeof(int*));
+	// for(int i = 0; i < n; i++){
+	// 	temp_graph[i] = (int*)calloc(n,sizeof(int));
+	// 	for(int j = 0; j < n; j++){
+	// 		temp_graph[i][j] = graph[i][j];
+	// 	}
+	// }
+	// struct Graph* TEMP;
+	// TEMP->adj = temp_graph;
+	// TEMP->n = n;
+	// TEMP->station_names = NULL;
 	
 	int vital_edges = 0;
 		
 	for(int i = 0; i < n; i++){
 		for(int j = i; j < n; j++){
-			if(temp_graph[i][j]==1){
-				temp_graph[i][j] = 0;
-				temp_graph[j][i] = 0;
-				int** temp_closure = warshall(TEMP);
-				for(int m = 0; m < n; m++){
-					for(int n = m; n < m; n++){
-						if(temp_closure[m][n]==0 && closure[m][n]==1){
+			if(graph[i][j]==1){
+				graph[i][j] = 0;
+				graph[j][i] = 0;
+				int** temp_closure = warshall(g);
+				bool flag = true;
+				for(int p = 0; p < n; p++){
+					if(flag == false){
+						break;
+					}
+					for(int q = p; q < n; q++){
+						if(temp_closure[p][q]==0 && closure[p][q]==1){
 							vital_edges++;
+							flag = false;
+							break;
 						}
 					}
 				}
-				temp_graph[i][j] = 1;
-				temp_graph[j][i] = 1;
+				graph[i][j] = 1;
+				graph[j][i] = 1;
 			}
 		}
 	}
@@ -257,9 +262,27 @@ bool maharaja_express(Graph* g, int source) {
     // Hint: Call the helper function and pass the visited array created here.
 }
 
+void printGraph(int** graph,int n){
+	for(int i = 0; i < n; i++){
+		for(int j = 0; j < n; j++){
+			printf("%d ",graph[i][j]);
+		}
+		printf("\n");
+	}
+}
 int main() {
     char input_file_path[100] = "testcase_1.txt"; // Can be modified
     Graph* g = create_graph(input_file_path); // Do not modify
+	int juncs = find_junctions(g);
+	bool p1 = sheldons_tour(g,true);
+	bool p2 = sheldons_tour(g,false);
+	int** closure = warshall(g);
+	int impossible_pairs = find_impossible_pairs(g);
+	int vital_tracks = find_vital_train_tracks(g);
+
+	printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
+	printGraph(closure,g->n);
+	printf("ip=%d vt=%d",impossible_pairs,vital_tracks);
     
     // Code goes here
 
