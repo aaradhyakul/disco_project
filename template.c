@@ -221,6 +221,52 @@ int* upgrade_railway_stations(Graph* g) {
     int* upgrades = calloc(g->n, sizeof(int)); // Do not modify
     
     // Code goes here
+	int** graph = g->adj;
+	int n = g->n;
+	int queue_front = 0;
+	int queue_back = 1;
+	int queue_capacity = 100;
+	int Q[queue_capacity];
+	bool visited[n];
+	for(int i = 0; i < n; i++){
+		visited[i] = false;
+	}
+	for(int i = 0; i < queue_capacity; i++){
+		Q[i] = -1;
+	}
+	Q[0] = 0;
+	upgrades[0] = 1;
+	bool flag = true;
+	while(Q[queue_front]!=-1){
+		int city = Q[queue_front];
+		for(int i = 0; i < n; i++){
+			if(graph[city][i]==1){
+				if(visited[i]==true){
+					if(upgrades[city]==upgrades[i]){
+						flag = false;	
+						break;
+					}
+				}else{
+					if(upgrades[city]==1){
+						upgrades[i]=0;
+					}else{
+						upgrades[i]=1;
+					}
+					Q[queue_back]=i;
+					queue_back++;
+					visited[i]=true;
+				}
+			}
+		}
+		if(flag==false){
+			for(int i = 0; i < n; i++){
+				upgrades[i]=-1;
+			}
+			break;
+		}
+		queue_front++;
+	}
+	
 
     return upgrades; // Do not modify
 }
@@ -279,10 +325,16 @@ int main() {
 	int** closure = warshall(g);
 	int impossible_pairs = find_impossible_pairs(g);
 	int vital_tracks = find_vital_train_tracks(g);
+	int* upgrades = upgrade_railway_stations(g);
+
 
 	printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
 	printGraph(closure,g->n);
 	printf("ip=%d vt=%d",impossible_pairs,vital_tracks);
+	printf("\n");
+	for(int i = 0; i < g->n; i++){
+		printf("%d ",upgrades[i]);
+	}
     
     // Code goes here
 
