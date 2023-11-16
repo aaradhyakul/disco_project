@@ -75,6 +75,7 @@ int find_junctions(Graph* g) {
 		}
 	}
 	printf("Number of junctions = %d",junction_count);
+	return junction_count;
 }
 
 /**
@@ -99,7 +100,7 @@ bool sheldons_tour(Graph* g, bool SAME_STATION) {
 		if(degree%2==0){
 			even_degree++;
 		}else{
-			odd_degree++:
+			odd_degree++;
 		}
 	}
 	if(SAME_STATION==true){
@@ -121,7 +122,7 @@ int** warshall(Graph* g) {
     }
 
     // Code goes here
-	int graph = g->adj;
+	int** graph = g->adj;
 	int n = g->n;
 	for(int i = 0; i < n; i++){
 		for(int j = 0; j < n; j++){
@@ -147,6 +148,17 @@ int** warshall(Graph* g) {
 */
 int find_impossible_pairs(Graph* g) {
     int** closure = warshall(g); // Do not modify
+	int** graph = g->adj;
+	int n = g->n;
+	int disconnected_pairs = 0;
+	for(int i = 0; i < n; i++){
+		for(int j = i; j < n; j++){
+			if(graph[i][j]==0){
+				disconnected_pairs++;
+			}
+		}
+	}
+	return disconnected_pairs;
     
 }
 
@@ -155,7 +167,42 @@ int find_impossible_pairs(Graph* g) {
  * Return the number of vital train tracks.
 */
 int find_vital_train_tracks(Graph* g) {
-    
+	int** closure =  warshall(g);
+	int** graph = g->adj;
+	int n = g->n;
+	int** temp_graph = (int**)calloc(n,sizeof(int*));
+	for(int i = 0; i < n; i++){
+		temp_graph[i] = (int*)calloc(n,sizeof(int));
+		for(int j = 0; j < n; j++){
+			temp_graph[i][j] = graph[i][j];
+		}
+	}
+	struct Graph* TEMP;
+	TEMP->adj = temp_graph;
+	TEMP->n = n;
+	TEMP->station_names = NULL;
+	
+	int vital_edges = 0;
+		
+	for(int i = 0; i < n; i++){
+		for(int j = i; j < n; j++){
+			if(temp_graph[i][j]==1){
+				temp_graph[i][j] = 0;
+				temp_graph[j][i] = 0;
+				int** temp_closure = warshall(TEMP);
+				for(int m = 0; m < n; m++){
+					for(int n = m; n < m; n++){
+						if(temp_closure[m][n]==0 && closure[m][n]==1){
+							vital_edges++;
+						}
+					}
+				}
+				temp_graph[i][j] = 1;
+				temp_graph[j][i] = 1;
+			}
+		}
+	}
+	return vital_edges;
 }
 
 /**
