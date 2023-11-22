@@ -152,13 +152,13 @@ int find_impossible_pairs(Graph* g) {
 	int n = g->n;
 	int disconnected_pairs = 0;
 	for(int i = 0; i < n; i++){
-		for(int j = i; j < n; j++){
+		for(int j = 0; j < n; j++){
 			if(closure[i][j]==0){
 				disconnected_pairs++;
 			}
 		}
 	}
-	return disconnected_pairs;
+	return disconnected_pairs/2;
     
 }
 
@@ -170,18 +170,6 @@ int find_vital_train_tracks(Graph* g) {
 	int** closure =  warshall(g);
 	int** graph = g->adj;
 	int n = g->n;
-	// int** temp_graph = (int**)calloc(n,sizeof(int*));
-	// for(int i = 0; i < n; i++){
-	// 	temp_graph[i] = (int*)calloc(n,sizeof(int));
-	// 	for(int j = 0; j < n; j++){
-	// 		temp_graph[i][j] = graph[i][j];
-	// 	}
-	// }
-	// struct Graph* TEMP;
-	// TEMP->adj = temp_graph;
-	// TEMP->n = n;
-	// TEMP->station_names = NULL;
-	
 	int vital_edges = 0;
 		
 	for(int i = 0; i < n; i++){
@@ -305,11 +293,9 @@ int distance(Graph* g, int city_x, int city_y) {
 		for(int i = 0; i < n; i++){
 			if(!visited[i] && graph[city][i]==1){
 				if(i==city_y){
-					printf("city=%d city_y=%d\n",city,city_y);
 					return lvl;
 				}
 				else if(!inqueue[i]){
-					printf("i=%d qb=%d\n",i,qb);
 					Q[qb][0] = i;
 					Q[qb][1] = lvl;
 					inqueue[i] = true;
@@ -351,7 +337,24 @@ int railway_capital(Graph* g) {
  * Helper function for Q.8
 */
 bool maharaja_express_tour(Graph* g, int source, int current_city, int previous_city, int* visited) {
-    
+	int **graph = g->adj;
+	int n = g->n;
+	visited[current_city] = 1;
+
+	for(int i = 0; i < n; i++){
+		if(graph[current_city][i]==1){
+			if(visited[i]==0 && i!=previous_city){
+				return maharaja_express_tour(g,source,i,current_city,visited);
+			}else if(visited[i] == 1 && i==source && previous_city!=source){
+				return true;
+			}
+
+		}
+
+	}
+	visited[current_city] = 0;
+	return false;
+	
 }
 
 /**
@@ -365,6 +368,10 @@ bool maharaja_express(Graph* g, int source) {
         visited[i] = 0;
     }
     // Hint: Call the helper function and pass the visited array created here.
+	bool res = maharaja_express_tour(g,source,source,-1,visited);
+	free(visited);
+	return res;
+
 }
 
 void printGraph(int** graph,int n){
@@ -376,8 +383,8 @@ void printGraph(int** graph,int n){
 	}
 }
 int main() {
-    char input_file_path[100] = "testcase_2.txt"; // Can be modified
-    Graph* g = create_graph(input_file_path); // Do not modify
+    // char input_file_path[100] = "testcase_2.txt"; // Can be modified
+    // Graph* g = create_graph(input_file_path); // Do not modify
 	// int juncs = find_junctions(g);
 	// bool p1 = sheldons_tour(g,true);
 	// bool p2 = sheldons_tour(g,false);
@@ -385,20 +392,28 @@ int main() {
 	// int impossible_pairs = find_impossible_pairs(g);
 	// int vital_tracks = find_vital_train_tracks(g);
 	// int* upgrades = upgrade_railway_stations(g);
-	int dist=distance(g,1,4);
-	int capital_station = railway_capital(g);
+	// int dist=distance(g,1,4);
+	// int capital_station = railway_capital(g);
+	// bool poss0 = maharaja_express(g,0);
+	// bool poss1 = maharaja_express(g,1);
+	// bool poss2 = maharaja_express(g,2);
+	// bool poss3 = maharaja_express(g,3);
 
 	// printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
-	printGraph(g->adj,g->n);
+	// printGraph(g->adj,g->n);
 	// printf("ip=%d vt=%d",impossible_pairs,vital_tracks);
-	printf("\n");
+	// printf("\n");
 	// for(int i = 0; i < g->n; i++){
 	// 	printf("%d ",upgrades[i]);
 	// }
-	printf("dist=%d\n",dist);
-	printf("capital=%d\n",capital_station);
+	// printf("dist=%d\n",dist);
+	// printf("capital=%d\n",capital_station);
+	// printf("possible:%s\n",poss0 ? "true":"false");
+	// printf("possible:%s\n",poss1 ? "true":"false");
+	// printf("possible:%s\n",poss2 ? "true":"false");
+	// printf("possible:%s\n",poss3 ? "true":"false");
     
     // Code goes here
 
-    return 0;
+    // return 0;
 }
