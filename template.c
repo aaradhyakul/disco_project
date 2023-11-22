@@ -277,7 +277,50 @@ int* upgrade_railway_stations(Graph* g) {
  * city_x is the index of X, city_y is the index of Y
 */
 int distance(Graph* g, int city_x, int city_y) {
-    
+	int **graph = g->adj;
+	int n = g->n;
+	
+	int queue_capacity = n + 1;
+	int qf = 0;
+	int qb = 1;
+	int Q[queue_capacity][2];
+	
+	bool visited[n];
+	bool inqueue[n];
+	for(int i = 0; i < n; i++){
+		visited[i] = false;
+		inqueue[i] = false;
+	}
+	for(int i = 0; i < queue_capacity; i++){
+		Q[i][0] = -1;
+	}
+	Q[0][0] = city_x;
+	Q[0][1] = 0;
+	inqueue[city_x] = true;
+	while(Q[qf][0]!=-1){
+		int city = Q[qf][0];
+		int lvl = Q[qf][1] + 1;
+		visited[city] = true;
+		for(int i = 0; i < n; i++){
+			if(!visited[i] && graph[city][i]==1){
+				if(i==city_y){
+					printf("city=%d city_y=%d\n",city,city_y);
+					return lvl;
+				}
+				else if(!inqueue[i]){
+					printf("i=%d qb=%d\n",i,qb);
+					Q[qb][0] = i;
+					Q[qb][1] = lvl;
+					inqueue[i] = true;
+					qb++;
+				}
+			}
+		}
+		qf++;
+	}
+	return -1;
+
+
 }
 
 /**
@@ -317,24 +360,25 @@ void printGraph(int** graph,int n){
 	}
 }
 int main() {
-    char input_file_path[100] = "testcase_1.txt"; // Can be modified
+    char input_file_path[100] = "testcase_2.txt"; // Can be modified
     Graph* g = create_graph(input_file_path); // Do not modify
-	int juncs = find_junctions(g);
-	bool p1 = sheldons_tour(g,true);
-	bool p2 = sheldons_tour(g,false);
-	int** closure = warshall(g);
-	int impossible_pairs = find_impossible_pairs(g);
-	int vital_tracks = find_vital_train_tracks(g);
-	int* upgrades = upgrade_railway_stations(g);
+	// int juncs = find_junctions(g);
+	// bool p1 = sheldons_tour(g,true);
+	// bool p2 = sheldons_tour(g,false);
+	// int** closure = warshall(g);
+	// int impossible_pairs = find_impossible_pairs(g);
+	// int vital_tracks = find_vital_train_tracks(g);
+	// int* upgrades = upgrade_railway_stations(g);
+	int dist=distance(g,1,4);
 
-
-	printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
-	printGraph(closure,g->n);
-	printf("ip=%d vt=%d",impossible_pairs,vital_tracks);
+	// printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
+	printGraph(g->adj,g->n);
+	// printf("ip=%d vt=%d",impossible_pairs,vital_tracks);
 	printf("\n");
-	for(int i = 0; i < g->n; i++){
-		printf("%d ",upgrades[i]);
-	}
+	// for(int i = 0; i < g->n; i++){
+	// 	printf("%d ",upgrades[i]);
+	// }
+	printf("dist=%d\n",dist);
     
     // Code goes here
 
