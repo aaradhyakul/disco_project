@@ -7,13 +7,14 @@
  * Member 3 Name - 
  * Member 3 BITS ID - 
 */
-
+#define INT_MAX 2147483647
 // ---------------------------DO NOT MODIFY (Begin)------------------------------
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+
 
 typedef struct Graph {
     int n; // Size of the graph
@@ -328,7 +329,22 @@ int distance(Graph* g, int city_x, int city_y) {
  * Return the index of any one possible railway capital in the network
 */
 int railway_capital(Graph* g) {
-    
+	int **graph = g->adj;
+	int n = g->n;
+	int min_dist = INT_MAX;
+	int station_no = -1;
+	for(int i = 0; i < n; i++){
+		int tot_dist = 0;
+		for(int j = 0; j < n; j++){
+			tot_dist+=distance(g,i,j);
+		}
+		if(tot_dist < min_dist){
+			min_dist = tot_dist;
+			station_no = i;
+		}
+	}
+	return station_no;
+
 }
 
 /**
@@ -370,6 +386,7 @@ int main() {
 	// int vital_tracks = find_vital_train_tracks(g);
 	// int* upgrades = upgrade_railway_stations(g);
 	int dist=distance(g,1,4);
+	int capital_station = railway_capital(g);
 
 	// printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
 	printGraph(g->adj,g->n);
@@ -379,6 +396,7 @@ int main() {
 	// 	printf("%d ",upgrades[i]);
 	// }
 	printf("dist=%d\n",dist);
+	printf("capital=%d\n",capital_station);
     
     // Code goes here
 
