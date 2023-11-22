@@ -214,7 +214,7 @@ int* upgrade_railway_stations(Graph* g) {
 	int n = g->n;
 	int queue_front = 0;
 	int queue_back = 1;
-	int queue_capacity = 100;
+	int queue_capacity = n+1;
 	int Q[queue_capacity];
 	bool visited[n];
 	for(int i = 0; i < n; i++){
@@ -382,38 +382,38 @@ void printGraph(int** graph,int n){
 		printf("\n");
 	}
 }
-int main() {
-    // char input_file_path[100] = "testcase_2.txt"; // Can be modified
-    // Graph* g = create_graph(input_file_path); // Do not modify
-	// int juncs = find_junctions(g);
-	// bool p1 = sheldons_tour(g,true);
-	// bool p2 = sheldons_tour(g,false);
-	// int** closure = warshall(g);
-	// int impossible_pairs = find_impossible_pairs(g);
-	// int vital_tracks = find_vital_train_tracks(g);
-	// int* upgrades = upgrade_railway_stations(g);
-	// int dist=distance(g,1,4);
-	// int capital_station = railway_capital(g);
-	// bool poss0 = maharaja_express(g,0);
-	// bool poss1 = maharaja_express(g,1);
-	// bool poss2 = maharaja_express(g,2);
-	// bool poss3 = maharaja_express(g,3);
+// int main() {
+//     char input_file_path[100] = "testcase_2.txt"; // Can be modified
+//     Graph* g = create_graph(input_file_path); // Do not modify
+// 	int juncs = find_junctions(g);
+// 	bool p1 = sheldons_tour(g,true);
+// 	bool p2 = sheldons_tour(g,false);
+// 	int** closure = warshall(g);
+// 	int impossible_pairs = find_impossible_pairs(g);
+// 	int vital_tracks = find_vital_train_tracks(g);
+// 	int* upgrades = upgrade_railway_stations(g);
+// 	int dist=distance(g,1,4);
+// 	int capital_station = railway_capital(g);
+// 	bool poss0 = maharaja_express(g,0);
+// 	bool poss1 = maharaja_express(g,1);
+// 	bool poss2 = maharaja_express(g,2);
+// 	bool poss3 = maharaja_express(g,3);
 
-	// printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
-	// printGraph(g->adj,g->n);
-	// printf("ip=%d vt=%d",impossible_pairs,vital_tracks);
-	// printf("\n");
-	// for(int i = 0; i < g->n; i++){
-	// 	printf("%d ",upgrades[i]);
-	// }
-	// printf("dist=%d\n",dist);
-	// printf("capital=%d\n",capital_station);
-	// printf("possible:%s\n",poss0 ? "true":"false");
-	// printf("possible:%s\n",poss1 ? "true":"false");
-	// printf("possible:%s\n",poss2 ? "true":"false");
-	// printf("possible:%s\n",poss3 ? "true":"false");
+// 	printf("juncs=%d p1=%d p2=%d",juncs,p1,p2);
+// 	printGraph(g->adj,g->n);
+// 	printf("ip=%d vt=%d",impossible_pairs,vital_tracks);
+// 	printf("\n");
+// 	for(int i = 0; i < g->n; i++){
+// 		printf("%d ",upgrades[i]);
+// 	}
+// 	printf("dist=%d\n",dist);
+// 	printf("capital=%d\n",capital_station);
+// 	printf("possible:%s\n",poss0 ? "true":"false");
+// 	printf("possible:%s\n",poss1 ? "true":"false");
+// 	printf("possible:%s\n",poss2 ? "true":"false");
+// 	printf("possible:%s\n",poss3 ? "true":"false");
     
     // Code goes here
 
-    // return 0;
-}
+//     return 0;
+// }
